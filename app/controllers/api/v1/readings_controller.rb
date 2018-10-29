@@ -1,4 +1,4 @@
-class ReadingsController < ApplicationController
+class Api::V1::ReadingsController < ApiController
   before_action :set_reading, only: [:show, :update, :destroy]
 
   # GET /readings
@@ -22,20 +22,6 @@ class ReadingsController < ApplicationController
     else
       render json: @reading.errors, status: :unprocessable_entity
     end
-  end
-
-  # PATCH/PUT /readings/1
-  def update
-    if @reading.update(reading_params)
-      render json: @reading
-    else
-      render json: @reading.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /readings/1
-  def destroy
-    @reading.destroy
   end
 
   private

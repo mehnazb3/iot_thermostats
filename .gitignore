@@ -18,6 +18,7 @@
 !/tmp/.keep
 /public/assets
 /public/system
+/public/api
 
 # Ignore uploaded files in development
 /storage/*
