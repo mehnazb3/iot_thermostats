@@ -1,0 +1,2 @@
+class ThermoStat < ApplicationRecord
+end

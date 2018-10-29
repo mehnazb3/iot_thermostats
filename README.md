@@ -120,7 +120,7 @@ The default directory structure of a generated Ruby on Rails application:
   |-- config
   |   |-- environments
   |   |-- initializers
-  |   `-- locales
+  |   |-- locales
   |-- db
   |-- lib
   |   |-- tasks
@@ -131,16 +131,16 @@ The default directory structure of a generated Ruby on Rails application:
   |   |-- functional
   |   |-- integration
   |   |-- performance
-  |   `-- unit
+  |   |-- unit
   |-- tmp
   |   |-- cache
   |   |-- pids
   |   |-- sessions
-  |   `-- sockets
-  `-- vendor
+  |   |-- sockets
+  |-- vendor
       |-- assets
-          `-- stylesheets
-      `-- plugins
+          |-- stylesheets
+      |-- plugins
 
 app
   Holds all the code that's specific to this particular application.
@@ -179,7 +179,7 @@ script
   Helper scripts for automation and generation.
 
 test
-  Unit and functional tests along with fixtures. 
+  Unit and functional tests along with fixtures.
 
 vendor
   External libraries that the application depends on.
