@@ -1,5 +1,5 @@
 class Api::V1::ThermoStatsController < Api::V1::ApiController
-  load_and_authorize_resource only: [:index, :show, :create]
+  # load_and_authorize_resource only: [:index, :show, :create]
   before_action :set_thermo_stat, only: [:show]
 
   # respond_to :json

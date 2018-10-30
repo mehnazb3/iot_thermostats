@@ -1,6 +1,7 @@
 class Api::V1::ReadingsController < Api::V1::ApiController
-  
-  load_and_authorize_resource only: [:index, :show, :create]
+
+  # load_and_authorize_resource only: [:index, :show, :create]
+  before_action :validate_thermostat
   before_action :set_reading, only: [:show]
 
   swagger_controller :readings, 'Reading management'
@@ -31,6 +32,17 @@ class Api::V1::ReadingsController < Api::V1::ApiController
     render json: @reading
   end
 
+  swagger_api :create do
+    summary 'Reading create action'
+    notes 'Creates a Reading'
+    param :form, :"reading[temperature]", :float, :required, 'Temperature'
+    param :form, :"reading[humidity]", :float, :required, 'Humidity'
+    param :form, :"reading[battery_charge]", :float, :required, 'Battery Charge'
+    response :created
+    response :unauthorized
+    response :bad_request
+  end
+
   # POST /readings
   def create
     @reading = Reading.new(reading_params)
@@ -43,6 +55,10 @@ class Api::V1::ReadingsController < Api::V1::ApiController
   end
 
   private
+    def validate_thermostat
+      @thermo_stat = ThermoStat.from_api_key(request.env["HTTP_X_API_KEY"])
+      render_error_state('Unauthorized', :unauthorized) if @thermo_stat.blank?
+    end
     # Use callbacks to share common setup or constraints between actions.
     def set_reading
       @reading = Reading.find(params[:id])

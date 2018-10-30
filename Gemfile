@@ -21,8 +21,6 @@ gem 'rack-attack'
 gem 'swagger-docs'
 # For API docs UI
 gem 'swagger-ui_rails'
-# For access restriction
-gem 'cancancan', '~> 2.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production

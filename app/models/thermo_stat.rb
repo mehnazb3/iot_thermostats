@@ -23,7 +23,14 @@ class ThermoStat < ApplicationRecord
 
   # SERIALIZED ATTRIBUTES
 
-  
+  ### METHODS
+  # CLASS Methods
+  class << self
+    def from_api_key(household_token)
+      user = ThermoStat.find_by_household_token household_token
+    end
+  end
+  # INSTANCE Methods
 
   # Generate a unique API key
   def generate_household_token
