@@ -1,11 +1,29 @@
-class Api::V1::ReadingsController < ApiController
-  before_action :set_reading, only: [:show, :update, :destroy]
+class Api::V1::ReadingsController < Api::V1::ApiController
+  
+  load_and_authorize_resource only: [:index, :show, :create]
+  before_action :set_reading, only: [:show]
+
+  swagger_controller :readings, 'Reading management'
+
+  swagger_api :index do
+    summary 'Returns all Readings'
+    notes 'Notes...'
+  end
 
   # GET /readings
   def index
     @readings = Reading.all
 
     render json: @readings
+  end
+
+  swagger_api :show do
+    summary 'Shows a Readings'
+    notes 'Shows a Readings'
+    param :path, :id, :integer, :required, 'Reading ID'
+    response :ok
+    response :unauthorized
+    response :bad_request
   end
 
   # GET /readings/1

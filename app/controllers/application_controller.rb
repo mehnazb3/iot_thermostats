@@ -1,21 +1,21 @@
 class ApplicationController < ActionController::API
   include ActionController::Serialization
 
-  before_action :authenticate
-  rescue_from CanCan::AccessDenied, with: :forbidden_access
-  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+  # before_action :authenticate
+  # rescue_from CanCan::AccessDenied, with: :forbidden_access
+  # rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   protected
 
   # Authenticate the user with token based authentication
   def authenticate
-      authenticate_token || render_unauthorized
+      authenticate_token
   end
 
   def authenticate_token
-    authenticate_with_http_token do |token, options|
-        @current_user = User.find_by(api_key: token)
-    end
+    # authenticate_with_http_token do |token, options|
+    #     @current_user = User.find_by(api_key: token)
+    # end
   end
 
   def forbidden_access

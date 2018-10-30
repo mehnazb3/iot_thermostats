@@ -1,9 +1,10 @@
-class Api::V1::ThermoStatsController < ApiController
-  before_action :set_thermo_stat, only: [:show, :update, :destroy]
+class Api::V1::ThermoStatsController < Api::V1::ApiController
+  load_and_authorize_resource only: [:index, :show, :create]
+  before_action :set_thermo_stat, only: [:show]
 
-  respond_to :json
+  # respond_to :json
 
-  swagger_controller :thermo_stats, 'ThermoStats'
+  swagger_controller :thermo_stats, 'ThermoStats management'
 
   swagger_api :index do
     summary 'Returns all Thermostats'
@@ -13,13 +14,37 @@ class Api::V1::ThermoStatsController < ApiController
   # GET /thermo_stats
   def index
     @thermo_stats = ThermoStat.all
-
     render json: @thermo_stats, status: :ok
+  end
+
+  swagger_api :index do
+    summary 'Returns all Thermostats'
+    notes 'Notes...'
+  end
+
+  swagger_api :show do
+    summary 'Shows a micro-blog'
+    notes 'Shows a thermo-stat with token and possible actions'
+    param :path, :id, :integer, :required, 'Thermo-stat ID'
+    response :ok
+    response :unauthorized
+    response :bad_request
   end
 
   # GET /thermo_stats/1
   def show
     render json: @thermo_stat
+  end
+
+
+
+  swagger_api :create do
+    summary 'Thermo-stat create action'
+    notes 'Creates a Thermo-stat'
+    param :form, :"thermo_stat[message]", :string, :required, 'Message of the micro-blog'
+    response :created
+    response :unauthorized
+    response :bad_request
   end
 
   # POST /thermo_stats
