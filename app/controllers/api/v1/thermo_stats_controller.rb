@@ -1,4 +1,4 @@
-class Api::V1::ThermoStatsController < Api::V1::ApiController
+class Api::V1::ThermoStatsController < ApiBaseController
   # load_and_authorize_resource only: [:index, :show, :create]
   before_action :set_thermo_stat, only: [:show]
 

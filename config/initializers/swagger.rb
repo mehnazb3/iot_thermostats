@@ -8,7 +8,7 @@ end
 
 class Swagger::Docs::Config
   def self.base_api_controller
-    Api::V1::ApiController
+    ApiBaseController
   end
 end
 
@@ -22,7 +22,7 @@ Swagger::Docs::Config.register_apis({
     base_path: "http://localhost:3000",
     # if you want to delete all .json files at each generation
     clean_directory: false,
-    base_api_controller: Api::V1::ApiController,
+    base_api_controller: ApiBaseController,
     # Ability to setup base controller for each api version. Api::V1::SomeController for example.
     #:parent_controller => Api::V1::SomeController,
     # add custom attributes to api-docs

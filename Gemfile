@@ -21,6 +21,15 @@ gem 'rack-attack'
 gem 'swagger-docs'
 # For API docs UI
 gem 'swagger-ui_rails'
+
+# Engine. Thin and Notification Servers
+gem 'thin'
+
+# Managing Process
+gem 'foreman'
+
+
+
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
@@ -43,11 +52,11 @@ gem 'bootsnap', '>= 1.1.0', require: false
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  # Use RSpec for specs
+  # RSpec for Test cases
   gem 'rspec-rails', '3.1.0'
 
   # Use Factory Girl for generating random test data
- gem 'factory_bot_rails'
+  gem 'factory_bot_rails'
 end
 
 group :development do

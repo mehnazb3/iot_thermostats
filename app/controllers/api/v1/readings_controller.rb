@@ -1,4 +1,4 @@
-class Api::V1::ReadingsController < Api::V1::ApiController
+class Api::V1::ReadingsController < ApiBaseController
 
   # load_and_authorize_resource only: [:index, :show, :create]
   before_action :validate_thermostat
@@ -45,7 +45,8 @@ class Api::V1::ReadingsController < Api::V1::ApiController
 
   # POST /readings
   def create
-    @reading = Reading.new(reading_params)
+    p "@thermostst"
+    @reading = @thermo_stat.readings.new(reading_params)
 
     if @reading.save
       render json: @reading, status: :created, location: @reading
@@ -66,6 +67,6 @@ class Api::V1::ReadingsController < Api::V1::ApiController
 
     # Only allow a trusted parameter "white list" through.
     def reading_params
-      params.require(:reading).permit(:thermostat_id, :number, :temperature, :humidity, :battery_charge)
+      params.require(:reading).permit(:number, :temperature, :humidity, :battery_charge)
     end
 end

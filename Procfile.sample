@@ -1,0 +1,5 @@
+redis:      redis-server
+#memcached:  memcached
+#scheduler:  bundle exec rake resque:scheduler
+rails:      bundle exec thin start
+#resque:     bundle exec rake environment resque:work RAILS_ENV=development QUEUE=critical,high,medium,low,mailer VERBOSE=1 PIDFILE=tmp/pids/resque_worker.pid
