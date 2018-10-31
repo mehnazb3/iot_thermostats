@@ -13,8 +13,7 @@ class Api::V1::ReadingsController < ApiBaseController
 
   # GET /readings
   def index
-    @readings = Reading.all
-
+    @readings = @thermo_stat.readings
     render json: @readings
   end
 
@@ -49,7 +48,7 @@ class Api::V1::ReadingsController < ApiBaseController
     @reading = @thermo_stat.readings.new(reading_params)
 
     if @reading.save
-      render json: @reading, status: :created, location: @reading
+      render json: @reading, status: :created
     else
       render json: @reading.errors, status: :unprocessable_entity
     end
@@ -57,6 +56,8 @@ class Api::V1::ReadingsController < ApiBaseController
 
   private
     def validate_thermostat
+      p 'request.env["HTTP_X_API_KEY"]'
+      p request.env["HTTP_X_API_KEY"]
       @thermo_stat = ThermoStat.from_api_key(request.env["HTTP_X_API_KEY"])
       render_error_state('Unauthorized', :unauthorized) if @thermo_stat.blank?
     end

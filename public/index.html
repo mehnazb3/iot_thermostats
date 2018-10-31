@@ -54,7 +54,7 @@
       console.log("key: " + key);
       if(key && key.trim() != "") {
         console.log("added key " + key);
-        window.authorizations.add("key", new ApiKeyAuthorization("api_key", key, "query"));
+        window.authorizations.add("X-API-KEY", new ApiKeyAuthorization("X-API-KEY", key, "header"));
       }
     })
     window.swaggerUi.load();

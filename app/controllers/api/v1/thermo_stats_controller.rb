@@ -8,18 +8,13 @@ class Api::V1::ThermoStatsController < ApiBaseController
 
   swagger_api :index do
     summary 'Returns all Thermostats'
-    notes 'Notes...'
+    notes 'Returns all Thermostats'
   end
 
   # GET /thermo_stats
   def index
     @thermo_stats = ThermoStat.all
     render json: @thermo_stats, status: :ok
-  end
-
-  swagger_api :index do
-    summary 'Returns all Thermostats'
-    notes 'Notes...'
   end
 
   swagger_api :show do
@@ -36,12 +31,10 @@ class Api::V1::ThermoStatsController < ApiBaseController
     render json: @thermo_stat
   end
 
-
-
   swagger_api :create do
     summary 'Thermo-stat create action'
     notes 'Creates a Thermo-stat'
-    param :form, :"thermo_stat[message]", :string, :required, 'Message of the micro-blog'
+    param :form, :"thermo_stat[location]", :string, :required, 'Message of the micro-blog'
     response :created
     response :unauthorized
     response :bad_request
@@ -50,9 +43,9 @@ class Api::V1::ThermoStatsController < ApiBaseController
   # POST /thermo_stats
   def create
     @thermo_stat = ThermoStat.new(thermo_stat_params)
-
+    @thermo_stat.household_token = ThermoStat.generate_household_token
     if @thermo_stat.save
-      render json: @thermo_stat, status: :created, location: @thermo_stat
+      render json: @thermo_stat, status: :created
     else
       render json: @thermo_stat.errors, status: :unprocessable_entity
     end

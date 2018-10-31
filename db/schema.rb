@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_29_160304) do
+ActiveRecord::Schema.define(version: 2018_10_31_174303) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "readings", force: :cascade do |t|
-    t.integer "thermostat_id", null: false
+    t.integer "thermo_stat_id", null: false
     t.integer "number"
     t.float "temperature", null: false
     t.float "humidity", null: false

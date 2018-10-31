@@ -6,6 +6,7 @@ class ThermoStat < ApplicationRecord
   # CONSTANTS
 
   # ASSOCIATIONS
+  has_many :readings
 
   # SCOPES
 
@@ -18,7 +19,7 @@ class ThermoStat < ApplicationRecord
 
   # Assign an API key on create
   before_create do |thermo_stat|
-    thermo_stat.household_token = thermo_stat.generate_household_token
+    thermo_stat.household_token = ThermoStat.generate_household_token
   end
 
   # SERIALIZED ATTRIBUTES
@@ -29,15 +30,17 @@ class ThermoStat < ApplicationRecord
     def from_api_key(household_token)
       user = ThermoStat.find_by_household_token household_token
     end
+
+    def generate_household_token
+      loop do
+        token = SecureRandom.base64.tr('+/=', 'Qrt')
+        break token unless ThermoStat.exists?(household_token: token)
+      end
+    end
   end
   # INSTANCE Methods
 
   # Generate a unique API key
-  def generate_household_token
-    loop do
-      token = SecureRandom.base64.tr('+/=', 'Qrt')
-      break token unless ThermoStat.exists?(household_token: token)
-    end
-  end
+  
 
 end
