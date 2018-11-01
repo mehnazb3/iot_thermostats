@@ -29,8 +29,11 @@ gem 'thin'
 gem 'foreman'
 # Use Redis adapter to run Action Cable in production
 gem 'redis', '~> 4.0'
+gem 'redis-objects'
 # Background Jobs
 gem 'sidekiq'
+# # Middle ware for scaling, balancing, scheduling
+# gem 'dalli'
 
 
 

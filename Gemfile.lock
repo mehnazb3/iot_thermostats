@@ -135,6 +135,8 @@ GEM
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
     redis (4.0.3)
+    redis-objects (1.4.3)
+      redis (~> 4.0)
     rspec-core (3.1.7)
       rspec-support (~> 3.1.0)
     rspec-expectations (3.1.2)
@@ -201,6 +203,7 @@ DEPENDENCIES
   rails (~> 5.2.0)
   rake (< 11.0)
   redis (~> 4.0)
+  redis-objects
   rspec-rails (= 3.1.0)
   sidekiq
   spring

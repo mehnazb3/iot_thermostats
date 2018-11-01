@@ -44,26 +44,38 @@ class Api::V1::ReadingsController < ApiBaseController
 
   # POST /readings
   def create
-    p "@thermostst"
-    @reading = @thermo_stat.readings.new(reading_params)
-
-    if @reading.save
-      render json: @reading, status: :created
+    if validate_reading_params
+      number = @thermo_stat.reading_count.increment
+      reading_data = { temperature: params[:reading][:temperature],
+        humidity: params[:reading][:humidity],
+        battery_charge:  params[:reading][:battery_charge]
+      }
+      @thermo_stat.unsaved_readings["#{number}"] = reading_data
+      ReadingProcessorWorker.perform_async(@thermo_stat.id, number)
+      render_success_json_with_number(number)
     else
       render json: @reading.errors, status: :unprocessable_entity
     end
   end
 
   private
+
     def validate_thermostat
-      p 'request.env["HTTP_X_API_KEY"]'
-      p request.env["HTTP_X_API_KEY"]
       @thermo_stat = ThermoStat.from_api_key(request.env["HTTP_X_API_KEY"])
       render_error_state('Unauthorized', :unauthorized) if @thermo_stat.blank?
     end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_reading
       @reading = Reading.find(params[:id])
+    end
+
+    def validate_reading_params
+      # p "Yet to work on this"
+    end
+
+    def render_success_json_with_number(number, status = :created)
+      render json: { reading_id: number }, status: status
     end
 
     # Only allow a trusted parameter "white list" through.

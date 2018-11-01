@@ -1,5 +1,6 @@
 class Reading < ApplicationRecord
   # MIXINS
+  include Redis::Objects
 
   # REDIS
 
@@ -18,6 +19,9 @@ class Reading < ApplicationRecord
   # ACCESSORS
 
   # CALLBACKS
+
+  # Redis
+  
 
   # Assign an API key on create
 

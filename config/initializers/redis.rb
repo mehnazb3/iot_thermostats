@@ -1,5 +1,6 @@
 require "redis"
+require 'redis/objects'
 
 config = YAML::load(File.open("#{Rails.root}/config/redis.yml"))[Rails.env]
 
-redis = Redis.new(config)
+Redis.current = Redis.new(config)

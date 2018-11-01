@@ -1,5 +1,6 @@
 class ThermoStat < ApplicationRecord
   # MIXINS
+  include Redis::Objects
 
   # REDIS
 
@@ -17,6 +18,11 @@ class ThermoStat < ApplicationRecord
 
   # CALLBACKS
 
+  # Redis
+  counter :reading_count
+  hash_key :unsaved_readings
+  hash_key :stats
+
   # Assign an API key on create
   before_create do |thermo_stat|
     thermo_stat.household_token = ThermoStat.generate_household_token
@@ -31,6 +37,7 @@ class ThermoStat < ApplicationRecord
       user = ThermoStat.find_by_household_token household_token
     end
 
+    # Generate a unique API key
     def generate_household_token
       loop do
         token = SecureRandom.base64.tr('+/=', 'Qrt')
@@ -39,8 +46,5 @@ class ThermoStat < ApplicationRecord
     end
   end
   # INSTANCE Methods
-
-  # Generate a unique API key
-  
 
 end
