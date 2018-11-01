@@ -1,0 +1,16 @@
+redis: &redis
+  host: localhost
+  port: 6379
+  db: 15
+
+development: &development
+  # namespace: iot_thermostat
+  <<: *redis
+
+production:
+  # namespace: iot_thermostat
+  <<: *redis
+
+test:
+  # namespace: iot_thermostat
+  <<: *redis
