@@ -2,7 +2,7 @@ class Api::V1::ReadingsController < ApiBaseController
 
   # load_and_authorize_resource only: [:index, :show, :create]
   before_action :validate_thermostat
-  before_action :set_reading, only: [:show]
+  # before_action :set_reading, only: [:show]
 
   swagger_controller :readings, 'Reading management'
 
@@ -17,6 +17,31 @@ class Api::V1::ReadingsController < ApiBaseController
     render json: @readings
   end
 
+  swagger_api :create do
+    summary 'Reading create action'
+    notes 'Creates a Reading'
+    param :form, :"reading[temperature]", :number, :required, 'Temperature'
+    param :form, :"reading[humidity]", :number, :required, 'Humidity'
+    param :form, :"reading[battery_charge]", :number, :required, 'Battery Charge'
+    response :created
+    response :unauthorized
+    response :bad_request
+  end
+
+  # POST /readings
+  def create
+    if validate_reading_params(params[:reading])
+      number = @thermo_stat.reading_count.increment
+      reading_data = clean_up_params(params[:reading],[:temperature, :humidity, :battery_charge])
+      @thermo_stat.unsaved_readings["#{number}"] = reading_data
+      # Background worker to save Reading
+      ReadingProcessorWorker.perform_async(@thermo_stat.id, number)
+      render_success_json_with_number(number)
+    else
+      render_error_state('Invalid Input', :bad_request)
+    end
+  end
+
   swagger_api :show do
     summary 'Shows a Readings'
     notes 'Shows a Readings'
@@ -28,33 +53,12 @@ class Api::V1::ReadingsController < ApiBaseController
 
   # GET /readings/1
   def show
-    render json: @reading
-  end
-
-  swagger_api :create do
-    summary 'Reading create action'
-    notes 'Creates a Reading'
-    param :form, :"reading[temperature]", :float, :required, 'Temperature'
-    param :form, :"reading[humidity]", :float, :required, 'Humidity'
-    param :form, :"reading[battery_charge]", :float, :required, 'Battery Charge'
-    response :created
-    response :unauthorized
-    response :bad_request
-  end
-
-  # POST /readings
-  def create
-    if validate_reading_params
-      number = @thermo_stat.reading_count.increment
-      reading_data = { temperature: params[:reading][:temperature],
-        humidity: params[:reading][:humidity],
-        battery_charge:  params[:reading][:battery_charge]
-      }
-      @thermo_stat.unsaved_readings["#{number}"] = reading_data
-      ReadingProcessorWorker.perform_async(@thermo_stat.id, number)
-      render_success_json_with_number(number)
+    params[:reading_id] ||= params[:id]
+    if params[:reading_id].present?
+      @reading = @thermo_stat.readings.where(number: params[:reading_id]).first || @thermo_stat.unsaved_readings["#{params[:reading_id]}"]
+      render json: @reading
     else
-      render json: @reading.errors, status: :unprocessable_entity
+      render_error_state('Invalid Input', :bad_request)
     end
   end
 
@@ -65,13 +69,10 @@ class Api::V1::ReadingsController < ApiBaseController
       render_error_state('Unauthorized', :unauthorized) if @thermo_stat.blank?
     end
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_reading
-      @reading = Reading.find(params[:id])
-    end
-
-    def validate_reading_params
+    def validate_reading_params(reading)
       # p "Yet to work on this"
+      reading.present? &&
+        [:temperature, :humidity, :battery_charge].select{|a| reading[a].present? && valid_float?(reading[a]) }.count == 3
     end
 
     def render_success_json_with_number(number, status = :created)

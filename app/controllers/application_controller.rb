@@ -23,4 +23,16 @@ class ApplicationController < ActionController::API
     render json: { success: true }, status: status
   end
 
+  def clean_up_params(params, filter)
+    new_params = {}
+    filter.collect{ |key| new_params[key.to_s] = params[key] }
+    new_params
+  end
+
+  def valid_float?(num)
+    # The double negation turns this into an actual boolean true - if you're 
+    # okay with "truthy" values (like 0.0), you can remove it.
+    !!Float(num) rescue false
+  end
+
 end
