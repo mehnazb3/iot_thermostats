@@ -1,14 +1,12 @@
 class Api::V1::ReadingsController < ApiBaseController
 
-  # load_and_authorize_resource only: [:index, :show, :create]
-  before_action :validate_thermostat
-  # before_action :set_reading, only: [:show]
+  before_action :find_node
 
   swagger_controller :readings, 'Reading management'
 
   swagger_api :index do
     summary 'Returns all Readings'
-    notes 'Notes...'
+    notes 'Returns all Readings for a given ThermoStat'
   end
 
   # GET /readings
@@ -30,9 +28,11 @@ class Api::V1::ReadingsController < ApiBaseController
 
   # POST /readings
   def create
+    p "ppapapap"
+    p params
     if validate_reading_params(params[:reading])
       number = @thermo_stat.reading_count.increment
-      reading_data = clean_up_params(params[:reading],[:temperature, :humidity, :battery_charge])
+      reading_data = clean_up_params(params[:reading],IotThermostat::Constants::Reading::REQUIRED_PARAMS)
       @thermo_stat.unsaved_readings["#{number}"] = reading_data
       # Background worker to save Reading
       ReadingProcessorWorker.perform_async(@thermo_stat.id, number)
@@ -55,7 +55,8 @@ class Api::V1::ReadingsController < ApiBaseController
   def show
     params[:reading_id] ||= params[:id]
     if params[:reading_id].present?
-      @reading = @thermo_stat.readings.where(number: params[:reading_id]).first || @thermo_stat.unsaved_readings["#{params[:reading_id]}"]
+      @reading = @thermo_stat.readings.where(number: params[:reading_id]).first ||
+        eval(@thermo_stat.unsaved_readings["#{params[:reading_id]}"].to_s)
       render json: @reading
     else
       render_error_state('Invalid Input', :bad_request)
@@ -64,15 +65,11 @@ class Api::V1::ReadingsController < ApiBaseController
 
   private
 
-    def validate_thermostat
-      @thermo_stat = ThermoStat.from_api_key(request.env["HTTP_X_API_KEY"])
-      render_error_state('Unauthorized', :unauthorized) if @thermo_stat.blank?
-    end
-
     def validate_reading_params(reading)
       # p "Yet to work on this"
       reading.present? &&
-        [:temperature, :humidity, :battery_charge].select{|a| reading[a].present? && valid_float?(reading[a]) }.count == 3
+        IotThermostat::Constants::Reading::REQUIRED_PARAMS.select{|a| reading[a].present? &&
+          valid_float?(reading[a]) }.count == IotThermostat::Constants::Reading::REQUIRED_PARAMS.count
     end
 
     def render_success_json_with_number(number, status = :created)

@@ -29,6 +29,15 @@ class ApplicationController < ActionController::API
     new_params
   end
 
+  def serialize(params)
+    params.map{|key, value| { key => eval(value.to_s) } }
+  end
+
+  def find_node
+    @thermo_stat = ThermoStat.from_api_key(request.env["HTTP_X_API_KEY"])
+    render_error_state('Unauthorized', :unauthorized) if @thermo_stat.blank?
+  end
+
   def valid_float?(num)
     # The double negation turns this into an actual boolean true - if you're 
     # okay with "truthy" values (like 0.0), you can remove it.

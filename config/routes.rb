@@ -3,8 +3,14 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :readings
-      resources :thermo_stats
+      resources :readings, only: [ :index, :create, :show ]
+
+      resources :thermo_stats, only: [ :index, :create, :show ] do
+        collection do
+          get :my_stats
+        end
+      end
+
     end
   end
 
