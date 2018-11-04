@@ -1,18 +1,29 @@
 class Api::V1::ReadingsController < ApiBaseController
+  include IotThermostat::CommonStatMethods
 
   before_action :find_node
 
   swagger_controller :readings, 'Reading management'
 
-  swagger_api :index do
-    summary 'Returns all Readings'
-    notes 'Returns all Readings for a given ThermoStat'
+  swagger_api :show do
+    summary 'Shows a Readings'
+    notes 'Shows a Readings'
+    param :path, :id, :integer, :required, 'Reading ID'
+    response :ok
+    response :unauthorized
+    response :bad_request
   end
 
-  # GET /readings
-  def index
-    @readings = @thermo_stat.readings
-    render json: @readings
+  # GET /readings/1
+  def show
+    params[:reading_id] ||= params[:id]
+    if params[:reading_id].present?
+      @reading = @thermo_stat.readings.find_by_number(params[:reading_id]) ||
+        format_redis_keys(eval(@thermo_stat.unsaved_readings["#{params[:reading_id]}"].to_s) , { reading_id: params[:reading_id] } )
+      render json: @reading
+    else
+      render_error_state('Invalid Input', :bad_request)
+    end
   end
 
   swagger_api :create do
@@ -34,32 +45,14 @@ class Api::V1::ReadingsController < ApiBaseController
       @thermo_stat.unsaved_readings["#{number}"] = reading_data
       # Background worker to save Reading
       ReadingProcessorWorker.perform_async(@thermo_stat.id, number)
+      # Calculate Stats
+      self.calculate_stats(@thermo_stat, number, reading_data )
       render_success_json_with_number(number)
     else
       render_error_state('Invalid Input', :bad_request)
     end
   end
 
-  swagger_api :show do
-    summary 'Shows a Readings'
-    notes 'Shows a Readings'
-    param :path, :id, :integer, :required, 'Reading ID'
-    response :ok
-    response :unauthorized
-    response :bad_request
-  end
-
-  # GET /readings/1
-  def show
-    params[:reading_id] ||= params[:id]
-    if params[:reading_id].present?
-      @reading = @thermo_stat.readings.where(number: params[:reading_id]).first ||
-        eval(@thermo_stat.unsaved_readings["#{params[:reading_id]}"].to_s)
-      render json: @reading
-    else
-      render_error_state('Invalid Input', :bad_request)
-    end
-  end
 
   private
 
@@ -67,6 +60,11 @@ class Api::V1::ReadingsController < ApiBaseController
       reading.present? &&
         IotThermostat::Constants::Reading::REQUIRED_PARAMS.select{|a| reading[a].present? &&
           valid_float?(reading[a]) }.count == IotThermostat::Constants::Reading::REQUIRED_PARAMS.count
+    end
+
+    def format_redis_keys(serialize_hash, options)
+      serialize_hash.merge!(options) if serialize_hash.present?
+      serialize_hash.each {|key,value| serialize_hash[key] = value.to_i}
     end
 
     def render_success_json_with_number(number, status = :created)

@@ -10,6 +10,7 @@ class Reading < ApplicationRecord
   belongs_to :thermo_stat
 
   # SCOPES
+  scope :karma_range, lambda {|range| where(:points => range)}
 
   # VALIDATIONS
   validates :temperature, presence: true, numericality: { only_float: true }

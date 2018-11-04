@@ -52,13 +52,14 @@ class Api::V1::ThermoStatsController < ApiBaseController
   end
 
   swagger_api :my_stats do
-    summary 'Display thermostat stats'
-    notes 'Display thermostat stats'
+    summary 'Display thermostat min, max, avg values for temperature, humidity, battery charge'
+    notes 'Get min, max, avg values for temperature, humidity, battery charge'
     response :ok
     response :unauthorized
     response :bad_request
   end
 
+  # GET /thermo_stats/my_stats
   def my_stats
     render json: serialize(@thermo_stat.stats.all) , status: :ok
   end
