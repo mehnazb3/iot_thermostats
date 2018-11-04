@@ -21,8 +21,6 @@ gem 'rack-attack'
 gem 'swagger-docs'
 # For API docs UI
 gem 'swagger-ui_rails'
-# Engine. Thin and Notification Servers
-gem 'thin'
 # Managing Process
 gem 'foreman'
 # Use Redis adapter to run Action Cable in production

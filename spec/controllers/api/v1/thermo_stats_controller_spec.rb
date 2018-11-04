@@ -68,8 +68,9 @@ RSpec.describe Api::V1::ThermoStatsController, :type => :controller do
 
   describe "GET my_stats" do
     describe "with valid params" do
+
       it "gives thermostat stats", :my_stats do
-        get :my_stats, params: { reading_id: json_response['reading_id'] }
+        get :my_stats
         parse_response =  JSON.parse(response.body)
         expect(parse_response).not_to be_nil
         expect_json_response(parse_response, JsonResponseHelper::ThermoStat::STATS)
