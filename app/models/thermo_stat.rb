@@ -45,6 +45,10 @@ class ThermoStat < ApplicationRecord
       end
     end
   end
+
   # INSTANCE Methods
+  def is_valid_sequence?(number)
+    self.readings.find_by_number(number).blank?
+  end
 
 end

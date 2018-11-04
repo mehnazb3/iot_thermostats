@@ -2,8 +2,6 @@ module IotThermostat
   module CommonStatMethods
 
     def calculate_stats(thermo_stat, number, reading_params )
-      p "reading_params----"
-      p reading_params
       prev_stats = eval(thermo_stat.stats.all.to_s)
       thermo_stat.stats[:temperature] = unit_stat(:temperature, reading_params[:temperature.to_s].to_f, prev_stats, number )
       thermo_stat.stats[:humidity] = unit_stat(:humidity, reading_params[:humidity.to_s].to_f, prev_stats, number )

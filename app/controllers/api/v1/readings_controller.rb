@@ -41,13 +41,15 @@ class Api::V1::ReadingsController < ApiBaseController
   def create
     if validate_reading_params(params[:reading])
       number = @thermo_stat.reading_count.increment
-      reading_data = clean_up_params(params[:reading],IotThermostat::Constants::Reading::REQUIRED_PARAMS)
-      @thermo_stat.unsaved_readings["#{number}"] = reading_data
-      # Background worker to save Reading
-      ReadingProcessorWorker.perform_async(@thermo_stat.id, number)
-      # Calculate Stats
-      self.calculate_stats(@thermo_stat, number, reading_data )
-      render_success_json_with_number(number)
+      if @thermo_stat.is_valid_sequence?(number)
+        reading_data = clean_up_params(params[:reading],IotThermostat::Constants::Reading::REQUIRED_PARAMS)
+        @thermo_stat.unsaved_readings["#{number}"] = reading_data
+        # Background worker to save Reading
+        ReadingProcessorWorker.perform_async(@thermo_stat.id, number)
+        # Calculate Stats
+        self.calculate_stats(@thermo_stat, number, reading_data )
+        render_success_json_with_number(number)
+      end
     else
       render_error_state('Invalid Input', :bad_request)
     end
