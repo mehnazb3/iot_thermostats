@@ -8,6 +8,6 @@ puts "Initializing Settings"
 puts "Initializing Thermostats"
 ["Germany", "India", "United States", "Japan", "China"].each do |address|
   thermostat = ThermoStat.new(location: address)
-  thermostat.household_token = thermostat.generate_household_token
+  thermostat.household_token = ThermoStat.generate_household_token
   puts "#{thermostat.id} with token #{thermostat.household_token} Created" if thermostat.save
 end
