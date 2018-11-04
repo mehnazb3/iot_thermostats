@@ -65,8 +65,10 @@ class Api::V1::ReadingsController < ApiBaseController
     end
 
     def format_redis_keys(serialize_hash, options)
-      serialize_hash.merge!(options) if serialize_hash.present?
-      serialize_hash.each {|key,value| serialize_hash[key] = value.to_i}
+      if serialize_hash.present?
+        serialize_hash.merge!(options)
+        serialize_hash.each {|key,value| serialize_hash[key] = value.to_i}
+      end
     end
 
     def render_success_json_with_number(number, status = :created)

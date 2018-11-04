@@ -12,7 +12,10 @@ class ThermoStat < ApplicationRecord
   # SCOPES
 
   # VALIDATIONS
-  validates :household_token, presence: true, length: { minimum: 5, maximum: 200}
+  validates :household_token, presence: true, length: {
+    minimum: IotThermostat::Constants::ThermoStat::MINIMUM, maximum: IotThermostat::Constants::ThermoStat::MAXIMUM}
+  validates :location, presence: true, length: {
+    minimum: IotThermostat::Constants::ThermoStat::MINIMUM, maximum: IotThermostat::Constants::ThermoStat::MAXIMUM}
 
   # ACCESSORS
 

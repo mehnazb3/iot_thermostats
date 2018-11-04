@@ -7,5 +7,10 @@ module IotThermostat
     module Reading
       REQUIRED_PARAMS = [:temperature, :humidity, :battery_charge]
     end
+
+    module ThermoStat
+      MINIMUM = 5
+      MAXIMUM = 200
+    end
   end
 end

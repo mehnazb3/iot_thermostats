@@ -21,7 +21,6 @@ class Api::V1::ThermoStatsController < ApiBaseController
     notes 'Creates a Thermo-stat'
     param :form, :"thermo_stat[location]", :string, :required, 'Message of the micro-blog'
     response :created
-    response :unauthorized
     response :bad_request
   end
 
@@ -32,7 +31,7 @@ class Api::V1::ThermoStatsController < ApiBaseController
     if @thermo_stat.save
       render json: @thermo_stat, status: :created
     else
-      render json: @thermo_stat.errors, status: :unprocessable_entity
+      render json: @thermo_stat.errors, status: :bad_request
     end
   end
 
@@ -41,7 +40,6 @@ class Api::V1::ThermoStatsController < ApiBaseController
     notes 'Shows a thermo-stat with token and possible actions'
     param :path, :id, :integer, :required, 'Thermo-stat ID'
     response :ok
-    response :unauthorized
     response :bad_request
   end
 
@@ -65,6 +63,9 @@ class Api::V1::ThermoStatsController < ApiBaseController
 
   private
   # Use callbacks to share common setup or constraints between actions.
+  def set_thermo_stat
+    @thermo_stat = ThermoStat.find(params[:id])
+  end
 
   # Only allow a trusted parameter "white list" through.
   def thermo_stat_params
