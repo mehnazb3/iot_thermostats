@@ -28,8 +28,6 @@ class Api::V1::ReadingsController < ApiBaseController
 
   # POST /readings
   def create
-    p "ppapapap"
-    p params
     if validate_reading_params(params[:reading])
       number = @thermo_stat.reading_count.increment
       reading_data = clean_up_params(params[:reading],IotThermostat::Constants::Reading::REQUIRED_PARAMS)
@@ -66,7 +64,6 @@ class Api::V1::ReadingsController < ApiBaseController
   private
 
     def validate_reading_params(reading)
-      # p "Yet to work on this"
       reading.present? &&
         IotThermostat::Constants::Reading::REQUIRED_PARAMS.select{|a| reading[a].present? &&
           valid_float?(reading[a]) }.count == IotThermostat::Constants::Reading::REQUIRED_PARAMS.count
