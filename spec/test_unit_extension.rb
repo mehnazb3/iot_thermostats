@@ -7,7 +7,6 @@ module TestUnitExtensions
     if expected_response.is_a?(Array)
       expect actual_response.is_a?(Array) && (actual_response.length == expected_response.length)
     else
-
       expected_response.keys.each do |key|
         expect actual_response.has_key?(key)
         if expected_response[key].is_a?(Hash)
@@ -21,10 +20,6 @@ module TestUnitExtensions
         end
       end
     end
-  end
-
-  def assert_exception_message(exception, message)
-    assert_equal message, exception.message
   end
 
 end

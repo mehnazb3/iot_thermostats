@@ -40,7 +40,7 @@ class ThermoStat < ApplicationRecord
       user = ThermoStat.find_by_household_token household_token
     end
 
-    # Generate a unique API key
+    # Auto generate Household token
     def generate_household_token
       loop do
         token = SecureRandom.base64.tr('+/=', 'Qrt')
