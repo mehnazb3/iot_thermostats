@@ -42,7 +42,7 @@ class Api::V1::ReadingsController < ApiBaseController
     if validate_reading_params(params[:reading])
       number = @thermo_stat.reading_count.increment
       if @thermo_stat.is_valid_sequence?(number)
-        reading_data = clean_up_params(params[:reading],IotThermostat::Constants::Reading::REQUIRED_PARAMS)
+        reading_data = clean_up_params(params[:reading], IotThermostat::Constants::Reading::REQUIRED_PARAMS)
         @thermo_stat.unsaved_readings["#{number}"] = reading_data
         # Background worker to save Reading
         ReadingProcessorWorker.perform_async(@thermo_stat.id, number)

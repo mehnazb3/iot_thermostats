@@ -3,7 +3,7 @@ RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs
 
 # Set an environment variable where the Rails app is installed to inside of Docker image
 ENV RAILS_ROOT /Users/mehnazbano/iot_thermostats
-ENV SECRET_KEY_BASE f9a1399bd69b68eca2a2725eb4c23c0b
+ENV SECRET_KEY_BASE 989b1ef93b400f5b9d1e4ddc0bc717fb
 RUN mkdir -p $RAILS_ROOT
 # Set working directory
 WORKDIR $RAILS_ROOT

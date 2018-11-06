@@ -1,21 +1,47 @@
 version: '3'
-volumes:
-  postgres_data: {}
 services:
+  db:
+    image: postgres
+    volumes:
+      - postgres:/usr/local/var/postgres/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: 'redis'
+    command: redis-server
+    volumes:
+      - 'redis:/usr/local/etc/data'
+    ports:
+      - "6379:6379"
+
   app:
     build:
       context: .
       dockerfile: ./docker/app/DockerFile
+    environment:
+      RAILS_ENV: $RAILS_ENV
+      REDIS_URL: $REDIS_URL
     depends_on:
       - db
+      - redis
     ports:
       - "3000:3000"
-  db:
-    image: postgres
+
+  sidekiq:
+    build:
+      context: .
+      dockerfile: ./docker/app/DockerFile
+    command: bundle exec sidekiq
+    environment:
+      RAILS_ENV: $RAILS_ENV
+      REDIS_URL: $REDIS_URL
+    depends_on:
+      - db
+      - redis
     volumes:
-      - postgres_data:/usr/local/var/postgres/data
-    ports:
-      - "5432:5432"
+      - '.:/app'
+
   web:
     build:
       context: .
@@ -24,3 +50,7 @@ services:
       - app
     ports:
       - "80:80"
+
+volumes:
+  postgres:
+  redis:

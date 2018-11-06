@@ -2,7 +2,6 @@ class ApplicationController < ActionController::API
 
   include ActionController::Serialization
 
-  # before_action :authenticate
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   protected
@@ -39,7 +38,7 @@ class ApplicationController < ActionController::API
   end
 
   def valid_float?(num)
-    # The double negation turns this into an actual boolean true - if you're 
+    # The double negation turns this into an actual boolean true - if you're
     # okay with "truthy" values (like 0.0), you can remove it.
     !!Float(num) rescue false
   end

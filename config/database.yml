@@ -9,22 +9,22 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  port: 5432
   username: postgres
   password: postgres
-  port: 5432
-
 
 development:
   <<: *default
   host: localhost
-  database: iot_thermostat_dev
+  database: iot_thermostats_dev
   host: localhost
 
 test:
   <<: *default
-  database: iot_thermostat_test
+  host: localhost
+  database: iot_thermostats_test
 
 production:
   <<: *default
-  database: iot_thermostat_prod
+  database: iot_thermostats_prod
   host: db

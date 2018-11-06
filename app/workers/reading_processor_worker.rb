@@ -1,7 +1,6 @@
 class ReadingProcessorWorker
   include Sidekiq::Worker
-  sidekiq_options queue: "high"
-  sidekiq_options retry: false
+  sidekiq_options queue: "high", retry: 3, backtrace: 5
 
   def perform(thermostat_id, number)
     thermo_stat = ThermoStat.where(id: thermostat_id).first
