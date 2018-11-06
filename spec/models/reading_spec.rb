@@ -33,6 +33,22 @@ RSpec.describe Reading, :type => :model do
       expect(FactoryBot.build(:reading, humidity: "20", thermo_stat_id: @thermo_stat.id)).to be_valid
       expect(FactoryBot.build(:reading, battery_charge: 90, thermo_stat_id: @thermo_stat.id)).to be_valid
     end
+
+    it "should have same number for different houshold" do
+      expect(FactoryBot.create(:reading, number: 1, thermo_stat_id: @thermo_stat.id)).to be_valid
+      expect(FactoryBot.create(:reading, number: 1, thermo_stat_id: FactoryBot.create(:thermo_stat).id )).to be_valid
+    end
+
+    it "should allow different number for same houshold" do
+      expect(FactoryBot.create(:reading, number: 1, thermo_stat_id: @thermo_stat.id)).to be_valid
+      expect(FactoryBot.create(:reading, number: 2, thermo_stat_id: @thermo_stat.id)).to be_valid
+    end
+
+    it "should not allow same number for a given thermostat" do
+      expect(FactoryBot.create(:reading, number: 1, thermo_stat_id: @thermo_stat.id)).to be_valid
+      expect{ FactoryBot.create(:reading, number: 1, thermo_stat_id: @thermo_stat.id)}.to raise_error(ActiveRecord::RecordInvalid,"Validation failed: Number has already been taken")
+    end
+
   end
 
 end

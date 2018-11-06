@@ -23,7 +23,9 @@ Follow the guidelines to setup this project on your local:
 * Create, migrate and seed the database.
 * Run `rake swagger:docs` command to generate the API Documentation.
 * Start the server using `foreman start` and hit the home page using `localhost:3000` which is default.
-* Make sure when swagger index page comes it has proper api-docs.json path (By default) .
+* Make sure when swagger index page comes it has proper api-docs.json path (By default).
+
+* Run tests using `bundle exec rspec` and make sure everything is green.
 
 
 Read below to know about the appliation:
