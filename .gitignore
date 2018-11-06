@@ -23,7 +23,14 @@
 # Ignore uploaded files in development
 /storage/*
 
+# Ignore Procfile
+Procfile
 
+# Ignore config files
+/config/database.yml
+/config/iot_thermostat_settings.yml
+/config/redis.yml
+/config/sidekiq.yml
 
 
 # Ignore the rvm per directory configuration file

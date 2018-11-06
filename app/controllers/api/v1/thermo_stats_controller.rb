@@ -1,5 +1,5 @@
 class Api::V1::ThermoStatsController < ApiBaseController
-  # load_and_authorize_resource only: [:index, :show, :create]
+
   before_action :set_thermo_stat, only: [:show]
   before_action :find_node, only: [:my_stats]
 

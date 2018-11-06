@@ -25,7 +25,6 @@ RSpec.describe Api::V1::ReadingsController, :type => :controller do
         post :create, params: valid_attributes
         expect(response.status).to eq 201
         expect(response).to have_http_status(:created)
-        expect(json_response).not_to be_nil
         expect(json_response.keys).to contain_exactly('reading_id')
       end
 
@@ -33,7 +32,6 @@ RSpec.describe Api::V1::ReadingsController, :type => :controller do
         post :create, params: valid_attributes
         expect(response.status).to eq 401
         expect(response).to have_http_status(:unauthorized)
-        expect(json_response).not_to be_nil
         expect(json_response).equal?(JsonResponseHelper::Error::NOT_AUTHENTICATED)
       end
     end
@@ -50,7 +48,6 @@ RSpec.describe Api::V1::ReadingsController, :type => :controller do
         expect(response).to have_http_status(:bad_request)
         expect(json_response.has_key?('error')).to be_truthy
       end
-
     end
   end
 
@@ -60,7 +57,6 @@ RSpec.describe Api::V1::ReadingsController, :type => :controller do
       get :show, params: { id: json_response['reading_id'] }
       expect(response.status).to eq 200
       expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body)).not_to be_nil
       expect_json_response(JSON.parse(response.body), JsonResponseHelper::Reading::SHOW)
     end
 

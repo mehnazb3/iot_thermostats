@@ -108,9 +108,6 @@ RSpec.describe Api::V1::ThermoStatsController, :type => :controller do
         expect(parse_response[2]['battery_charge']['max'].to_f).equal?(90)
         expect(parse_response[2]['battery_charge']['avg'].to_f).equal?(70)
       end
-
-
-
     end
 
     describe "with invalid params" do
@@ -130,11 +127,10 @@ RSpec.describe Api::V1::ThermoStatsController, :type => :controller do
     it "should respond to unsaved_readings", :my_stats do
       expect(@thermo_stat.unsaved_readings.all).equal?({})
     end
+
     it "should respond to stats", :my_stats do
       expect_json_response(@thermo_stat.stats.all, JsonResponseHelper::ThermoStat::STATS)
     end
   end
-
-
 
 end

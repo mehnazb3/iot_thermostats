@@ -3,11 +3,11 @@ class Api::V1::ReadingsController < ApiBaseController
 
   before_action :find_node
 
-  swagger_controller :readings, 'Reading management'
+  swagger_controller :readings, 'Reading Management'
 
   swagger_api :show do
-    summary 'Shows a Readings'
-    notes 'Shows a Readings'
+    summary 'Shows a Reading'
+    notes 'Shows a Reading'
     param :path, :id, :integer, :required, 'Reading ID'
     response :ok
     response :unauthorized

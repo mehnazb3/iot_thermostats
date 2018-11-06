@@ -4,7 +4,6 @@ namespace :redis_objects do
     update_thermostat_readings_counter
 
     reset_thermostat_unsaved_readings
-    update_thermostat_unsaved_readings
 
     reset_thermostat_stats
     update_thermostat_stats
@@ -21,10 +20,6 @@ namespace :redis_objects do
 
   task :reset_thermostat_unsaved_readings => :environment do
     reset_thermostat_unsaved_readings
-  end
-
-  task :update_thermostat_unsaved_readings => :environment do
-    update_thermostat_unsaved_readings
   end
 
   task :reset_thermostat_stats => :environment do
@@ -51,13 +46,6 @@ namespace :redis_objects do
     ThermoStat.all.each do |thermo_stat|
       thermo_stat.unsaved_readings.clear
     end
-  end
-
-  # This will be used for backup - YET TO WORK ON THIS
-  def update_thermostat_unsaved_readings
-    # ThermoStat.all.each do |thermo_stat|
-    #   thermo_stat.reading_count = thermo_stat.readings.count
-    # end
   end
 
   def reset_thermostat_stats

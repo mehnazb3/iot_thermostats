@@ -1,6 +1,6 @@
 require "rails_helper"
 RSpec.describe  ReadingProcessorWorker do
-  describe "routing" do
+  describe "Reading Processor Workers" do
     it "Enqueues a reading processor worker" do
       ReadingProcessorWorker.perform_async(1, 1)
       expect(ReadingProcessorWorker.jobs.size).to eq(1)
